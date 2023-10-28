@@ -16,5 +16,5 @@ install:
 # "-f" is included to force delete the file without asking for confirmation
 # Remove the added PATH in the user's shell configuration file
 uninstall:
-    rm -f /usr/local/bin/x86_toolchain.sh
+	rm -f /usr/local/bin/x86_toolchain.sh
 	sed -i '/\/usr\/local\/bin/d' ~/.bashrc
