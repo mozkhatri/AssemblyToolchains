@@ -4,12 +4,17 @@
 # ISS Program, SADT, SAIT
 # October 2023
 
-
-install:
 # Copy "x86_toolchain.sh" to "/usr/local/bin" directory and make it executable
+# Update the PATH in the user's shell configuration file
+install:
 	cp x86_toolchain.sh /usr/local/bin
 	chmod +x /usr/local/bin/x86_toolchain.sh
+	echo 'export PATH=$$PATH:/usr/local/bin' >> ~/.bashrc
+	source ~/.bashrc
 
-uninstall:
 # Remove "x86_toolchain.sh" from "/usr/local/bin" directory
-    rm /usr/local/bin/x86_toolchain.sh
+# "-f" is included to force delete the file without asking for confirmation
+# Remove the added PATH in the user's shell configuration file
+uninstall:
+    rm -f /usr/local/bin/x86_toolchain.sh
+	sed -i '/\/usr\/local\/bin/d' ~/.bashrc
