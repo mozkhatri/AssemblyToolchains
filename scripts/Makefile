@@ -10,7 +10,7 @@ install:
 	cp x86_toolchain.sh /usr/local/bin
 	chmod +x /usr/local/bin/x86_toolchain.sh
 	echo 'export PATH=$$PATH:/usr/local/bin' >> ~/.bashrc
-	source ~/.bashrc
+	exec $$SHELL
 
 # Remove "x86_toolchain.sh" from "/usr/local/bin" directory
 # "-f" is included to force delete the file without asking for confirmation
@@ -18,3 +18,4 @@ install:
 uninstall:
 	rm -f /usr/local/bin/x86_toolchain.sh
 	sed -i '/\/usr\/local\/bin/d' ~/.bashrc
+	exec $$SHELL
