@@ -7,7 +7,7 @@
 # Copy "x86_toolchain.sh" to "/usr/local/bin" directory and make it executable
 # Update the PATH in the user's shell configuration file
 install:
-	cp x86_toolchain.sh /usr/local/bin
+	sudo cp x86_toolchain.sh /usr/local/bin
 	chmod +x /usr/local/bin/x86_toolchain.sh
 	echo 'export PATH=$$PATH:/usr/local/bin' >> ~/.bashrc
 	exec $$SHELL
