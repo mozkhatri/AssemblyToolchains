@@ -8,7 +8,7 @@
 # Update the PATH in the user's shell configuration file
 install:
 	sudo cp x86_toolchain.sh /usr/local/bin
-	chmod +x /usr/local/bin/x86_toolchain.sh
+	sudo chmod +x /usr/local/bin/x86_toolchain.sh
 	echo 'export PATH=$$PATH:/usr/local/bin' >> ~/.bashrc
 	exec $$SHELL
 
@@ -16,6 +16,6 @@ install:
 # "-f" is included to force delete the file without asking for confirmation
 # Remove the added PATH in the user's shell configuration file
 uninstall:
-	rm -f /usr/local/bin/x86_toolchain.sh
+	sudo rm -f /usr/local/bin/x86_toolchain.sh
 	sed -i '/\/usr\/local\/bin/d' ~/.bashrc
 	exec $$SHELL
