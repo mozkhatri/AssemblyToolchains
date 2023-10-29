@@ -4,6 +4,7 @@
 # ISS Program, SADT, SAIT
 # October 2023
 
+# ***User may need to input password in order to let the script run***
 # Copy "x86_toolchain.sh" to "/usr/local/bin" directory and make it executable
 # Update the PATH in the user's shell configuration file
 install:
