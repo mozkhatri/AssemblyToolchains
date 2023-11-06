@@ -1,0 +1,17 @@
+Manual page for X86_toolchain script
+
+This manual page was created as part of assignment 1 for Professor Lubos Kuzma. 
+The page assumes a switch to x64 by default as that was my original task, but I deemed it not large enough of a contribution and I built this on top. 
+
+ 
+How to install the man page:
+
+simply type the following commands:
+	cp <filename> /usr/local/man/man1/<filename>
+	gzip /usr/local/man/man1/<filename>
+	man <filename>
+	
+for shell scripts:
+
+	install -g 0 -o 0 -m 0644 <filename> /usr/local/man/man1/
+	gzip /usr/local/man/man1/<filename>
