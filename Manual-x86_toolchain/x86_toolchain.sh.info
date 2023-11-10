@@ -1,0 +1,159 @@
+This is x86_toolchain.sh.info, produced by makeinfo version 7.0.3 from
+x86_Toolchain.texinfo.
+
+
+GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+Copyright (C) 2007 Free Software Foundation, Inc.  <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+
+File: x86_toolchain.sh.info,  Node: Top,  Next: SYNOPSIS,  Prev: (dir),  Up: (dir)
+
+* Menu:
+
+* SYNOPSIS::Overview of the x86 Toolchain
+* DESCRIPTION::Usage (Flags, Syntax and Specifications) and Details Pertaining to the x86 Toolchain
+* PREREQUISITES::How to Configure x86 Toolchain
+* ENVIRONMENT::Environment Assumptions
+* VERSION::Version Information
+* BUGS::List of Any Known Operability Issues
+* AUTHOR::Project Acknowledgements
+
+
+File: x86_toolchain.sh.info,  Node: SYNOPSIS,  Next: DESCRIPTION,  Prev: (dir),  Up: (dir)
+
+SYNOPSIS This Toolchain is designed to enhance and optimize the
+usability of GDB Enhanced Features (GEF) by automating certain processes
+and tasks on the User’s behalf.  The goal of this project is to enable
+lower-level .nasm files to Compile and Debug seamlessly, in an
+accessible User Interface.
+
+   The goal of this project is to create a tool that simplifies the
+process of compilation and debugging by reducing the number of steps and
+instructions required.
+
+
+File: x86_toolchain.sh.info,  Node: DESCRIPTION,  Next: PREREQUISITES,  Prev: (dir),  Up: (dir)
+
+DESCRIPTION
+x86_toolchain.sh [ options ] <assembly filename> [-o | –output <output
+filename>]
+
+OPTIONS
+-v | –verbose Show some information about steps performed.
+-g | –gdb Run gdb command on executable.
+-b | –break <break point> Add breakpoint after running gdb.  Default is
+_start.
+-r | –run Run program in gdb automatically.  Same as run command inside
+gdb env.
+-q | –qemu Run executable in QEMU emulator.  This will execute the
+program.
+-64| –x86-64 Compile for 64bit (x86-64) system.
+-o | –output <filename> Output filename.
+
+
+File: x86_toolchain.sh.info,  Node: PREREQUISITES,  Next: ENVIRONMENT,  Prev: (dir),  Up: (dir)
+
+
+PREREQUISITES
+
+Install GDB:
+$ sudo apt-get update && sudo apt-get install gdb
+
+Install GEF:
+$ via the install script
+$$ using curl
+$ bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
+
+$$ using wget
+$ bash -c "$(wget https://gef.blah.cat/sh -O -)"
+
+$ or manually
+$ wget -O ~/.gdbinit-gef.py -q https://gef.blah.cat/py
+$ echo source ~/.gdbinit-gef.py >> ~/.gdbinit
+
+$ or alternatively from inside gdb directly
+$ gdb -q
+(gdb) pi import urllib.request as u, tempfile as t;
+g=t.NamedTemporaryFile(suffix=’-gef.py’); open(g.name,
+’wb+’).write(u.urlopen(’https://tinyurl.com/gef-main’).read());
+gdb.execute(’source %s’ % g.name)
+
+Add Toolchain Script to PATH:
+$ echo ’export PATH=$PATH:~/ITSC204/scripts’ >> ~/.bashrc
+
+Install QEMU
+$ sudo apt install qemu-user
+
+
+File: x86_toolchain.sh.info,  Node: ENVIRONMENT,  Next: VERSION,  Prev: (dir),  Up: (dir)
+
+ENVIRONMENT
+
+Assumptions for Intel x86 Environment in Kali Linux:
+
+Install NASM - sudo apt-get install nasm
+Install VSCode - sudo apt-get install code
+Install assembly extension inside VS Code - extension name: nasm
+Assign the above extension to .s files
+Install GDB - sudo apt-get install gdb
+Install GEF - https://github.com/hugsy/gef
+Create / download x-86_toolchain.sh script
+Make the above script executable
+Add the above script to PATH: **echo ’export
+PATH=$PATH:~/ITSC204/scripts’ >> .bashrc Note: writing it to .bashrc
+makes the path persistent within bash
+
+
+File: x86_toolchain.sh.info,  Node: VERSION,  Next: BUGS,  Prev: (dir),  Up: (dir)
+
+VERSION
+
+The x86 Toolchain Shell Script v1.0
+
+
+File: x86_toolchain.sh.info,  Node: BUGS,  Next: AUTHOR,  Prev: (dir),  Up: (dir)
+
+BUGS
+
+NO KNOWN BUGS AT THIS TIME.
+
+
+File: x86_toolchain.sh.info,  Node: AUTHOR,  Next: Top,  Prev: (dir),  Up: (dir)
+
+AUTHOR
+
+Created by Lubos Kuzma
+ISS Program, SADT, SAIT
+August 2022
+
+   GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007
+Copyright (C) 2007 Free Software Foundation, Inc.  <https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
+
+
+
+   The x86 Toolchain Shell Script Manual v1.0
+Created by Alexander Myrdal
+On Behalf of Group A-4
+
+
+
+Tag Table:
+Node: Top337
+Node: SYNOPSIS773
+Node: DESCRIPTION1333
+Node: PREREQUISITES1978
+Node: ENVIRONMENT2851
+Node: VERSION3514
+Node: BUGS3646
+Node: AUTHOR3766
+
+End Tag Table
+
+
+Local Variables:
+coding: utf-8
+End:
