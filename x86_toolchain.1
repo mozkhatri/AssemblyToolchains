@@ -1,0 +1,129 @@
+.TH X86_TOOLCHAIN.SH 1 25-10-2023
+
+.SH NAME
+
+x86_toolchain.sh \- x86-64 based compiler Toolchain
+
+.SH SYNOPSIS
+
+.B x86_toolchain.sh
+[\fBoptions\fR]
+<\fIassembly_filename\fR>
+[\fB\-o | \-\-output\fR <\fIoutput_filename\fR>]
+
+.SH DESCRIPTION
+.ad l 
+.nh
+This toolchain was built for applying modality and ease of use to compiling and debugging NASM based assembly code.
+It uses \fBnasm\fR to compile and \fBld\fR to link with options to debug and run inside \fBgdb\fR.
+This version was modified to run in x86-64 bit architecture by default.
+
+The goal of this project is to create a tool that simplifies the process of compilation and debugging by reducing the number of steps and instructions required. 
+
+Instructions for toolchain installation can be located at: \fIhttps://github.com/LubosKuzma/ITSC204/blob/main/scripts/README.md
+
+.SH OPTIONS
+
+.TP
+.BR \-v ", " \-\-verbose                
+	Show more information about steps performed and the set arguments.
+.TP
+.BR \-g ", " \-\-gdb                    
+	Run gdb command on executable.
+.TP
+.BR \-b ", " "\-\-break " <\fIbreakpoint\fR>    
+	Add breakpoint after running \fBgdb\fR.
+.TP
+.BR \-r ", " \-\-run                    
+	Run program in \fBgdb\fR automatically. Same as run command inside \fBgdb\fR environment.
+.TP
+.BR \-q ", " \-\-qemu                   
+	Run executable in \fBqemu\fR emulator. This will execute the program.
+.TP
+.BR \-32 ", " \-\-x86\-32              
+	Compile for 32-bit (x86-32) system.
+.TP
+.BR \-o ", " "\-\-output " <\fIfilename\fR>      
+	Desired name for new output file.
+	
+.SS GDB / GEF specific commands:
+After compilation and executing the file using \fGDB\fR, the user is able to control the debugger as normal.
+GDB offers extensive functionality in debugging. Below is a list of some of the more common ones:
+.TP
+\fBb\fR - Puts a breakpoint at the current line
+.PP
+	Alternate usage: \fBb\fR [\fBoption\fR]
+
+	[\fBmain\fR] - Puts a breakpoint at the beginning of the program
+
+	[\fBN\fR] - Puts a breakpoint at line N
+
+	[\fB+N\fR] - Puts a breakpoint N lines down from the current line
+
+	[\fBn\fR] - Puts a breakpoint at the beginning of function "fn"
+
+	[\fBN\fR] - Deletes breakpoint number N
+
+\fBinfo break\fR - list breakpoints
+
+\fBr\fR - Runs the program until a breakpoint or error
+
+\fBc\fR - Continues running the program until the next breakpoint or error
+
+\fBf\fR - Runs until the current function is finished
+
+\fBs\fR - Runs the next line of the program
+
+	Alternate usage: \fBs\fR [\fBoption\fR]
+
+	[\fBN\fR] - Runs the next N lines of the program
+
+\fBn\fR - Like s, but it does not step into functions
+
+\fBp\fR <\fIvar\fR> - Prints the current value of the variable "var"
+
+\fBbt\fR - Prints a stack trace
+
+\fBu\fR - Goes up a level in the stack
+
+	Alternate usage: \fBu\fR [\fBoption\fR]
+
+	[\fBN\fR] - Runs until you get N lines in front of the current line
+
+\fBd\fR - Goes down a level in the stack
+
+\fBq\fR - Quits gdb
+	
+.SH PREREQUISITES
+
+.SS x86-64 Bit architecture:
+.BR gcc ", " gdb ", " gef ", " qemu
+
+.SS Arm architecture:
+.BR arm\-gcc ", "multiarch ", " gdb ", " gef ", " qemu
+
+.SS Add toolchain script to PATH:
+.TP
+.ad l
+\fBFor bash:\fR
+.TP
+"echo \(aqexport PATH=$PATH:<\fIfilename\fR>\(aq >>/.bashrc"
+.TP 
+\fBFor zsh:\fR
+.TP
+"echo \(aqexport PATH=$PATH:<\fIfilename\fR>\(aq >>/.zsh"
+
+.SH BUGS
+
+No known bugs. 
+.sp 0
+If you find a bug, please report it at \fIhttps://github.com/LubosKuzma
+
+.SH SEE ALSO
+
+\fBgdb\fR(1), \fBnasm\fR(1), \fBld\fR(1)
+
+.SH AUTHOR
+.TP
+Lubos Kuzma \fIhttps://www.linkedin.com/in/lubos-kuzma-0719a586
+ISS program, SADT, SAIT. August 2022
