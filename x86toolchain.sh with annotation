@@ -1,0 +1,179 @@
+#! /bin/bash
+
+# Created by Lubos Kuzma
+# ISS Program, SADT, SAIT
+# August 2022
+#boiler plate
+#modified 05-Nov-23
+#Name: ALI, Akbar
+#SAIT 
+
+if [ $# -lt 1 ]; then   #starts if block to check command line argument and $# represents the number of arguments passed to script
+	echo "Usage:"
+	echo ""
+	echo "x86_toolchain.sh [ options ] <assembly filename> [-o | --output <output filename>]"
+	echo ""
+	echo "-v | --verbose                Show some information about steps performed."
+	echo "-g | --gdb                    Run gdb command on executable."
+	echo "-b | --break <break point>    Add breakpoint after running gdb. Default is _start."
+	echo "-r | --run                    Run program in gdb automatically. Same as run command inside gdb env."
+	echo "-q | --qemu                   Run executable in QEMU emulator. This will execute the program."
+	echo "-64| --x86-64                 Compile for 64bit (x86-64) system."
+	echo "-o | --output <filename>      Output filename."
+
+	exit 1             #This line exits the the script with a non zero status 
+fi                     #it will closes if block 
+
+POSITIONAL_ARGS=()     #These line initialize several variables. "POSITIONAL_ARG" will store non-option arguments, and the following are used to set flags
+GDB=False
+OUTPUT_FILE=""
+VERBOSE=False
+BITS=False
+QEMU=False
+BREAK="_start"
+RUN=False
+while [[ $# -gt 0 ]]; do    		#this line starts a while loop, and checks if the number of remaining argument is greater than 0
+	case $1 in              		#this starts case statement to check the value of first argument($1) for different cases
+		-g|--gdb)           		#it is -g or --gdb options
+			GDB=True        		#it sets the GDB variable to TRUE
+			shift # past argument	#shifts to the next argument
+			;;
+		-o|--output)				#-0 or --output section to handle option. 
+			OUTPUT_FILE="$2"		#it stores the next argument in file name in OUTPUT_FILE
+			shift # past argument	#after storing argument in file, shift to the arguments
+			shift # past value
+			;;
+		-v|--verbose)				#it is for -v or --Verbose option
+			VERBOSE=True			#it sets the VERBOSE variable to True 
+			shift # past argument	#shifts to the next argument
+			;;
+		-64|--x84-64)				#it handles the -64 or --x86-64 option
+			BITS=True				#it sets BITS variable to True
+			shift # past argument	#it will shifts to the next argument
+			;;
+		-q|--qemu)					#it handles -q or --qemu options
+			QEMU=True				#it sets QEMU variable to True 
+			shift # past argument	#it shifts to next argument
+			;;
+		-r|--run)					#it handles the -r or --run options
+			RUN=True				#it sets RUN to True
+			shift # past argument	#it shifts to the next argument
+			;;
+		-b|--break)					#it handles -b or --break option
+			BREAK="$2"				#Store the next argument as the breakpoint
+			shift # past argument	#Move to the argument after the breakpoint
+			shift # past value
+			;;
+		-*|--*)
+			echo "Unknown option $1" 		#Handles unknown options 
+			exit 1							#exits with a non-zero status
+			;;
+		*)
+			POSITIONAL_ARGS+=("$1") # save positional arg  #store non-option arguments in the array
+			shift # past argument							#move to the next argument
+			;;
+	esac													#this line closes the case statement
+done														#this line closes while loop
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters  #this line sets the positional parameters to the POSITIONAL_ARG array 
+
+if [[ ! -f $1 ]]; then											#this line checks if the specified assembly file does not exist using -f test
+	echo "Specified file does not exist"						#if the file does not exit, these lines print an error message 
+	exit 1														#exit the script with non-zero status
+fi																#this line closes the if block
+
+if [ "$OUTPUT_FILE" == "" ]; then								#this line checks if the OUTPUT_FILE variable is empty
+	OUTPUT_FILE=${1%.*}											#if OUTPUT_FILE is not specified, this line sets it to the input file name with the extension removed using ${1%.*}
+fi																#it line closes the if block
+
+if [ "$VERBOSE" == "True" ]; then								#this will check if verbose mode is enabled by examining the VERBOSE variable
+	echo "Arguments being set:"									#if verbose mode is enabled then following lines print information about script's setting and the start of the NASM assembly process
+	echo "	GDB = ${GDB}"
+	echo "	RUN = ${RUN}"
+	echo "	BREAK = ${BREAK}"
+	echo "	QEMU = ${QEMU}"
+	echo "	Input File = $1"
+	echo "	Output File = $OUTPUT_FILE"
+	echo "	Verbose = $VERBOSE"
+	echo "	64 bit mode = $BITS" 
+	echo ""
+
+	echo "NASM started..."
+
+fi																#closes if block
+
+if [ "$BITS" == "True" ]; then									#this line checks the value of the BITS variable to determine whether to assemble the code for a 64-bit system
+
+	nasm -f elf64 $1 -o $OUTPUT_FILE.o && echo ""				#if BITS is set to True this line assembles the assembly code using "nasm" with the "-f elf64" options
+																#specifying the input and output filenames. The "&& echo" part ensures that an empty line is printed after the command execution
+																
+elif [ "$BITS" == "False" ]; then								#checks if the "BITS" variable is set to "False" including 32-bit assembly
+
+	nasm -f elf $1 -o $OUTPUT_FILE.o && echo ""					#if "BITS" is "False", this line assembles the code for a 32-bits system using "nasm" with the "-f elf" option
+
+fi																#closes the if block
+
+if [ "$VERBOSE" == "True" ]; then								#checks if verbose mode is enabled
+
+	echo "NASM finished"										
+	echo "Linking ..."
+	
+fi
+
+if [ "$VERBOSE" == "True" ]; then								#this line checks if verbose mode is enabled
+
+	echo "NASM finished"										#if verbose mode is enabled, these lines print messages to indicate the completion of the assembly process and the start of the linking process
+	echo "Linking ..."
+fi
+
+if [ "$BITS" == "True" ]; then									#this line checks if the "BITS" variable is set to "True", indicating 64-bit architecture	
+
+	ld -m elf_x86_64 $OUTPUT_FILE.o -o $OUTPUT_FILE && echo ""	#if "BITS" is set to "True", this line links the object file into an executable using "ld" with the "-m elf_x86_64" option 
+
+
+elif [ "$BITS" == "False" ]; then								#this line checks if the "BITS" variable is set to "False", indicating 32-bit architecture
+
+	ld -m elf_i386 $OUTPUT_FILE.o -o $OUTPUT_FILE && echo ""	#if "BITS" is "False", this line links the object file into an executable using "ld" with the "-m elf_i386" option
+
+fi																#closes if block
+
+
+if [ "$VERBOSE" == "True" ]; then								#this line checks verbose mode is enabled
+
+	echo "Linking finished"										#if verbose mode is enabled, these lines print a message to indicate the completion of the linking process
+
+fi																#closes if block
+
+if [ "$QEMU" == "True" ]; then									#checks if the "QEMU" option is enabled
+
+	echo "Starting QEMU ..."									#if "QEMU" is enabled these lines print a message indicating the start of the "QEMU" emulator
+	echo ""
+
+	if [ "$BITS" == "True" ]; then								#checks if the "BITS" variable is set to "True", indicating a 64-bit system
+	
+		qemu-x86_64 $OUTPUT_FILE && echo ""						#if "BITS" is "True", this line executes the program in the "QEMU" emulator for a 64-bit system using "qemu-x86_64"
+
+	elif [ "$BITS" == "False" ]; then							#this line checks if the "BITS" variable is set to "False", indicating a 32-bit system
+
+		qemu-i386 $OUTPUT_FILE && echo ""						#if "BITS" is "False" this line executes the program in the QEMU emulator for a 32-bit system using "qemu-i386"
+
+	fi															#closes if block
+
+	exit 0														#after executing the program in QEMU this line exits the scripts with a successful status (0)
+	
+fi																#closes if block for handling the "QEMU" option
+
+if [ "$GDB" == "True" ]; then									#checks "GDB" option is enabled
+
+	gdb_params=()												#if "GDB" is eable, these lines create an array called "gdb_params" 
+	gdb_params+=(-ex "b ${BREAK}")								#it add a "GDB" command to set a breakpoint using the "-ex" option and the value of "BREAK"
+
+	if [ "$RUN" == "True" ]; then								#if the "RUN" option is enabled, these lines add the "GDB" command to run the program using the "-ex" option and the value "-r"
+
+		gdb_params+=(-ex "r")									#Finally, these lines execute GDB with the specified parameters (if any) and the output file as the target program
+
+	fi
+
+	gdb "${gdb_params[@]}" $OUTPUT_FILE
+
+fi
